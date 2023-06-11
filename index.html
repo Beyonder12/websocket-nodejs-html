@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="dataContainer"></div>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:8080');
+    const dataContainer = document.getElementById('dataContainer');
+
+    // Connection opened
+    socket.addEventListener('open', (event) => {
+        console.log('Connected to WebSocket server');
+    });
+
+    // Listen for messages
+    socket.addEventListener('messagek', (event) => {
+        console.log('Message from server: ', event.data);
+        displayData(event.data);
+    });
+
+    // Fetch data from server every second
+    setInterval(() => {
+        socket.send('getData');
+    }, 1000);
+
+    // Display data with timestamp
+    function displayData(data) {
+        const timestamp = new Date().toLocaleTimeString();
+        const formattedData = `${timestamp}: ${data}`;
+        const newData = document.createElement('p');
+        newData.textContent = formattedData;
+        dataContainer.appendChild(newData);
+        dataContainer.scrollTop = dataContainer.scrollHeight;
+    }
+  </script>
+</body>
+</html>
